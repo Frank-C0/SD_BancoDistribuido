@@ -1,0 +1,52 @@
+version: '3'
+
+networks:
+  serviciosmongo_mynetwork:
+    external: true
+
+services:
+  nfs1:
+    image: itsthenetwork/nfs-server-alpine:6-arm
+    # image: openebs/nfs-server-alpine
+    privileged: true
+    volumes:
+      - ./shared:/shared
+    environment:
+      - SHARED_DIRECTORY=/shared
+    networks:
+      serviciosmongo_mynetwork:
+        ipv4_address: 192.168.1.12
+    expose:
+      - "2049"  
+  
+  nfs2:
+    image: itsthenetwork/nfs-server-alpine:6-arm
+    # image: openebs/nfs-server-alpine
+    privileged: true
+    volumes:
+      - ./shared:/shared
+    environment:
+      - SHARED_DIRECTORY=/shared
+    networks:
+      serviciosmongo_mynetwork:
+        ipv4_address: 192.168.1.13
+    expose:
+      - "2049"
+
+
+  nfs3:
+    image: itsthenetwork/nfs-server-alpine:6-arm
+    # image: openebs/nfs-server-alpine
+    privileged: true
+    volumes:
+      - ./shared:/shared
+    environment:
+      - SHARED_DIRECTORY=/shared
+    networks:
+      serviciosmongo_mynetwork:
+        ipv4_address: 192.168.1.14
+    expose:
+      - "2049"
+
+
+

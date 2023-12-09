@@ -1,0 +1,39 @@
+version: '3'
+
+networks:
+  serviciosmongo_mynetwork:
+    external: true
+
+services:
+  nfs1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NFS_SERVER_IP=192.168.1.12
+        - NFS_SHARED_FOLDER=/shared
+    networks:
+      - serviciosmongo_mynetwork
+    container_name: nfs1
+
+  nfs2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NFS_SERVER_IP=192.168.1.12
+        - NFS_SHARED_FOLDER=/shared
+    networks:
+      - serviciosmongo_mynetwork
+    container_name: nfs2
+
+  nfs3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NFS_SERVER_IP=192.168.1.12
+        - NFS_SHARED_FOLDER=/shared
+    networks:
+      - serviciosmongo_mynetwork
+    container_name: nfs3
