@@ -8,32 +8,45 @@ services:
   nfs1:
     build:
       context: .
-      dockerfile: Dockerfile
-      args:
-        - NFS_SERVER_IP=192.168.1.12
-        - NFS_SHARED_FOLDER=/shared
+      dockerfile: Dockerfile  # cambiar esto requiere un docker compose build
+      
+    environment:
+      - NFS_SERVER_IP=192.168.1.12
+      - NFS_SHARED_FOLDER=/
+    privileged: true
+    
     networks:
-      - serviciosmongo_mynetwork
+      serviciosmongo_mynetwork:
+        ipv4_address: 192.168.1.15
+    # command: ["sh", "-c", "/app/entrypoint.sh"]
     container_name: nfs1
 
   nfs2:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - NFS_SERVER_IP=192.168.1.12
-        - NFS_SHARED_FOLDER=/shared
+    environment:
+      - NFS_SERVER_IP=192.168.1.12
+      - NFS_SHARED_FOLDER=/
+    privileged: true
+    
     networks:
-      - serviciosmongo_mynetwork
+      serviciosmongo_mynetwork:
+        ipv4_address: 192.168.1.16
+    # command: ["sh", "-c", "/app/entrypoint.sh && python manage.py runserver 0.0.0.0:8000"]
     container_name: nfs2
 
   nfs3:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - NFS_SERVER_IP=192.168.1.12
-        - NFS_SHARED_FOLDER=/shared
+    environment:
+      - NFS_SERVER_IP=192.168.1.12
+      - NFS_SHARED_FOLDER=/
+    privileged: true
+    
     networks:
-      - serviciosmongo_mynetwork
+      serviciosmongo_mynetwork:
+        ipv4_address: 192.168.1.17
+    # command: ["sh", "-c", "/app/entrypoint.sh && python manage.py runserver 0.0.0.0:8000"]
     container_name: nfs3

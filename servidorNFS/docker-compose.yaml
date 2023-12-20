@@ -5,48 +5,53 @@ networks:
     external: true
 
 services:
-  nfs1:
-    image: itsthenetwork/nfs-server-alpine:6-arm
-    # image: openebs/nfs-server-alpine
+  nfs1-server:
+    image: gists/nfs-server  # Cambiado a una imagen que funciona
+    container_name: nfs1-server
     privileged: true
-    volumes:
-      - ./shared:/shared
+    # ports:
+    #   - "2049:2049"
+    cap_add:
+      - SYS_ADMIN
+      - SETPCAP
     environment:
-      - SHARED_DIRECTORY=/shared
+      - "NFS_DOMAIN=*"
+    volumes:
+      - ./shared_1:/nfs-share
     networks:
       serviciosmongo_mynetwork:
         ipv4_address: 192.168.1.12
-    expose:
-      - "2049"  
-  
-  nfs2:
-    image: itsthenetwork/nfs-server-alpine:6-arm
-    # image: openebs/nfs-server-alpine
+
+  nfs2-server:
+    image: gists/nfs-server
+    container_name: nfs2-server
     privileged: true
-    volumes:
-      - ./shared:/shared
+    # ports:
+    #   - "2049:2049"
+    cap_add:
+      - SYS_ADMIN
+      - SETPCAP
     environment:
-      - SHARED_DIRECTORY=/shared
+      - "NFS_DOMAIN=*"
+    volumes:
+      - ./shared_2:/nfs-share
     networks:
       serviciosmongo_mynetwork:
         ipv4_address: 192.168.1.13
-    expose:
-      - "2049"
 
-
-  nfs3:
-    image: itsthenetwork/nfs-server-alpine:6-arm
-    # image: openebs/nfs-server-alpine
+  nfs3-server:
+    image: gists/nfs-server
+    container_name: nfs3-server
     privileged: true
-    volumes:
-      - ./shared:/shared
+    # ports:
+    #   - "2049:2049"
+    cap_add:
+      - SYS_ADMIN
+      - SETPCAP
     environment:
-      - SHARED_DIRECTORY=/shared
+      - "NFS_DOMAIN=*"
+    volumes:
+      - ./shared_3:/nfs-share
     networks:
       serviciosmongo_mynetwork:
         ipv4_address: 192.168.1.14
-    expose:
-      - "2049"
-
-
-
