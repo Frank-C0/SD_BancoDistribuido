@@ -1,0 +1,7 @@
+<!-- lista_cuentas.html -->
+<h2>Cuentas del Cliente</h2>
+<ul>
+    {% for cuenta in cuentas %}
+        <li><a href="{% url 'detalle_cuenta' cuenta.id %}">{{ cuenta.numero_cuenta }} - Saldo: {{ cuenta.saldo }}</a></li>
+    {% endfor %}
+</ul>

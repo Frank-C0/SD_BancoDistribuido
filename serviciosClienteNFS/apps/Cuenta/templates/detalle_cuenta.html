@@ -1,0 +1,9 @@
+<!-- detalle_cuenta.html -->
+<h2>Detalle de la Cuenta</h2>
+<p>Número de Cuenta: {{ cuenta.numero_cuenta }}</p>
+<p>Saldo: {{ cuenta.saldo }}</p>
+
+<!-- Enlace para realizar un depósito -->
+<a href="{% url 'realizar_deposito' cuenta.id %}">Realizar Depósito</a>
+<!-- Agrega más enlaces para otros tipos de transacciones si es necesario -->
+ 

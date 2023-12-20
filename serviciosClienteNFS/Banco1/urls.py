@@ -17,8 +17,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 
+# urlpatterns = [
+#     path("admin/", admin.site.urls),
+#     # path("client/", include('apps.Cliente.urls')),
+#     # path("",RedirectView.as_view(url='client/login/',permanent=True)),
+#     path('BancoDistribuido/', include('apps.BancoDistribuido.urls')),
+# ]
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("client/", include('apps.Cliente.urls')),
-    path("",RedirectView.as_view(url='client/login/',permanent=True)),
+    path("", RedirectView.as_view(url='client/login/',permanent=True)),
+    path("cuenta/", include('apps.Cuenta.urls')),
+    # path("",RedirectView.as_view(url='client/login/',permanent=True)),
 ]
