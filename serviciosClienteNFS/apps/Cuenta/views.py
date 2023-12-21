@@ -21,6 +21,7 @@ class RealizarTransferenciaInternaView(View):
         cuentas_destino = Cuenta.objects.exclude(id=cuenta_id)  # Excluye la cuenta actual como destinatario
         return render(request, self.template_name, {'cuenta': cuenta, 'cuentas_destino': cuentas_destino})
 
+    @transaction.atomic
     def post(self, request, cuenta_id):
         monto_str = request.POST.get('monto')
         cuenta_destino_id = request.POST.get('cuenta_destino')
@@ -63,6 +64,7 @@ class RealizarTransferenciaInterbancariaView(View):
         cuenta = get_object_or_404(Cuenta, id=cuenta_id)
         return render(request, self.template_name, {'cuenta': cuenta})
 
+    @transaction.atomic
     def post(self, request, cuenta_id):
         monto_str = request.POST.get('monto')
         cuenta_destino = request.POST.get('cuenta_destino_numero')
@@ -73,7 +75,7 @@ class RealizarTransferenciaInterbancariaView(View):
         except InvalidOperation:
             mensaje = 'El monto proporcionado no es válido.'
             return render(request, self.template_name, {'cuenta': cuenta_origen, 'mensaje': mensaje})
-            
+
         # Puedes crear una instancia de Transaccion para registrar la operación
         if monto and cuenta_destino:
             transaccion = Transaccion.objects.create(
@@ -107,6 +109,7 @@ class RealizarDepositoView(View):
         cuenta = get_object_or_404(Cuenta, id=cuenta_id)
         return render(request, self.template_name, {'cuenta': cuenta})
 
+    @transaction.atomic
     def post(self, request, cuenta_id):
         monto_str = request.POST.get('monto')
 
@@ -143,6 +146,7 @@ class RealizarRetiroView(View):
         cuenta = get_object_or_404(Cuenta, id=cuenta_id)
         return render(request, self.template_name, {'cuenta': cuenta})
 
+    @transaction.atomic
     def post(self, request, cuenta_id):
         monto_str = request.POST.get('monto')
 
