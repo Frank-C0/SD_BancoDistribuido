@@ -7,8 +7,8 @@ class Cuenta(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     banco = models.ForeignKey(Banco, on_delete=models.CASCADE)
     saldo = models.DecimalField(max_digits=10, decimal_places=2)
-    numero_cuenta = models.CharField(max_length=20, unique=True)
-    numero_cuenta_interbancario = models.CharField(max_length=30, unique=True)
+    numero_cuenta = models.CharField(max_length=10, unique=True)
+    numero_cuenta_interbancario = models.CharField(max_length=20, unique=True)
     fecha_apertura = models.DateField()
     activa = models.BooleanField(default=True)
 
@@ -23,11 +23,12 @@ class Transaccion(models.Model):
         ('DEPOSITO', 'Depósito'),
         ('RETIRO', 'Retiro'),
         ('TRANSFERENCIA', 'Transferencia'),
+        ('TRANSFERENCIA INTERBANCARIA', 'Transferencia Interbancaria')
     ]
 
     cuenta_origen = models.ForeignKey(Cuenta, related_name='transacciones_origen', on_delete=models.CASCADE)
     cuenta_destino = models.ForeignKey(Cuenta, related_name='transacciones_destino', on_delete=models.CASCADE)
-    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+    tipo = models.CharField(max_length=50, choices=TIPO_CHOICES)
     monto = models.DecimalField(max_digits=10, decimal_places=2)
     fecha = models.DateTimeField(auto_now_add=True)
 

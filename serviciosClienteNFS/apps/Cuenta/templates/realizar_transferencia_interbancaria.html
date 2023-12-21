@@ -1,0 +1,21 @@
+{% block content %}
+  <h2>Realizar Transferencia Interbancaria</h2>
+  <p>Número de Cuenta Interbancaria CCI: {{ cuenta.numero_cuenta_interbancario }}</p>
+  <p>Saldo actual: {{ cuenta.saldo }}</p>
+
+  <form method="post" action="">
+    {% csrf_token %}
+    
+    <label for="monto">Monto:</label>
+    <input type="text" name="monto" required>
+    
+    <label for="cuenta_destino_numero">Número de Cuenta Destino:</label>
+    <input type="text" name="cuenta_destino_numero" required>
+    
+    <button type="submit">Realizar Transferencia</button>
+  </form>
+
+  {% if mensaje %}
+    <p>{{ mensaje }}</p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+<!-- Similar al realizar_deposito.html, ajusta según tus necesidades -->
+<h2>Realizar Retiro</h2>
+<p>Número de Cuenta: {{ cuenta.numero_cuenta }}</p>
+<p>Saldo actual: {{ cuenta.saldo }}</p>
+
+<!-- Formulario para realizar el Retiro -->
+<form method="post" action="">
+    {% csrf_token %}
+    <label for="monto">Monto del Retiro:</label>
+    <input type="text" id="monto" name="monto" required>
+
+    <input type="submit" value="Realizar Retiro">
+</form>

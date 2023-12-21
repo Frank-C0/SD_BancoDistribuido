@@ -4,6 +4,12 @@
 <p>Saldo: {{ cuenta.saldo }}</p>
 
 <!-- Enlace para realizar un depósito -->
-<a href="{% url 'realizar_deposito' cuenta.id %}">Realizar Depósito</a>
+<a href="{% url 'realizar_transferencia' cuenta.id %}">Realizar Transferencia</a>
+<br>
+<a href="{% url 'realizar_retiro' cuenta.id %}">Realizar Retiro</a>
+<br>
+<a href="{% url 'realizar_deposito' cuenta.id %}">Realizar Deposito</a>
+<br>
+<a href="{% url 'realizar_transferencia_interbancaria' cuenta.id %}">Realizar Tranferencia Interbancaria</a>
 <!-- Agrega más enlaces para otros tipos de transacciones si es necesario -->
  

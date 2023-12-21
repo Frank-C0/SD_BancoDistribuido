@@ -1,0 +1,19 @@
+<h2>Realizar Tranferencia</h2>
+<p>Número de Cuenta: {{ cuenta.numero_cuenta }}</p>
+<p>Saldo actual: {{ cuenta.saldo }}</p>
+
+<!-- Formulario para realizar el Tranferencia -->
+<form method="post" action="">
+    {% csrf_token %}
+    <label for="monto">Monto de la Tranferencia:</label>
+    <input type="text" id="monto" name="monto" required>
+
+    <label for="cuenta_destino">Selecciona el destinatario:</label>
+    <select id="cuenta_destino" name="cuenta_destino" required>
+        {% for cuenta_destino in cuentas_destino %}
+            <option value="{{ cuenta_destino.id }}">{{ cuenta_destino.numero_cuenta }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="submit" value="Realizar Tranferencia">
+</form>
