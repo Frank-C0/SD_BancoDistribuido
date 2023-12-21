@@ -32,5 +32,15 @@ class Cliente(AbstractBaseUser,PermissionsMixin):
     def __str__(self):
         return self.email
     
+    def to_json(self):
+        return {
+            'email': self.email,
+            'nombre': self.nombre,
+            'is_active': self.is_active,
+            'is_staff': self.is_staff,
+        }
+        
     class Meta:
             verbose_name_plural = 'Clientes'
+
+    

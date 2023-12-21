@@ -1,3 +1,5 @@
+import os
+import simplejson as json
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from .models import Cuenta, Transaccion
@@ -5,6 +7,9 @@ from bson.decimal128 import Decimal128
 from decimal import Decimal, InvalidOperation
 from datetime import datetime
 from django.db import transaction
+from django.forms import model_to_dict
+import Pyro4
+import time
 
 class DetalleCuentaView(View):
     template_name = 'detalle_cuenta.html'
@@ -77,7 +82,7 @@ class RealizarTransferenciaInterbancariaView(View):
             return render(request, self.template_name, {'cuenta': cuenta_origen, 'mensaje': mensaje})
 
         # Puedes crear una instancia de Transaccion para registrar la operación
-        if monto and cuenta_destino:
+        if monto and cuenta_destino and cuenta_origen.saldo.to_decimal()>=monto:
             transaccion = Transaccion.objects.create(
                 cuenta_origen=cuenta_origen,
                 cuenta_destino=cuenta_destino,
@@ -148,8 +153,9 @@ class RealizarRetiroView(View):
 
     @transaction.atomic
     def post(self, request, cuenta_id):
-        monto_str = request.POST.get('monto')
 
+        print("post retirar")
+        monto_str = request.POST.get('monto')
         cuenta_origen = get_object_or_404(Cuenta, id=cuenta_id)
 
         try:
@@ -166,11 +172,69 @@ class RealizarRetiroView(View):
                 tipo='RETIRO'
                 # fecha=datetime.now()
             )
+            
             cuenta_origen.saldo = cuenta_origen.saldo.to_decimal() - monto
-            cuenta_origen.save()
+            
 
+            actualizar_archivo_json(cuenta_origen, None, monto, transaccion)
+            cuenta_origen.save()
+            print("guardado")
+
+            
             mensaje = f'Retiro de {monto} realizado con éxito.'
         else:
             mensaje = 'Fondos insuficientes o monto no válido para el retiro.'
 
         return render(request, self.template_name, {'cuenta': cuenta_origen, 'mensaje': mensaje})
+
+
+def request_cs(server):
+    return server.request_cs()
+
+def release_cs(server):
+    return server.release_cs()
+
+def can_enter_cs(server):
+    return server.can_enter_cs()
+
+
+def actualizar_archivo_json(cuenta_origen, cuenta_destino_numero, monto, transaccion):
+    print("actualizar_archivo_json")
+
+    ruta_archivo_json = f'/home/ubuntu/Bancos/serviciosClienteNFS/apps/Cuenta/CuentasArchivos/{cuenta_origen.numero_cuenta}_transacciones.json'
+
+
+    server_uri = "PYRO:central_server@localhost:50000"
+
+    with Pyro4.Proxy(server_uri) as central_server:
+        
+
+       
+        
+        request_cs(central_server)
+        while not can_enter_cs(central_server):
+            time.sleep(1)
+
+        print(f"está en la sección crítica.")
+        time.sleep(10)  # Simulando el tiempo en la sección crítica
+
+        
+        # Crea o carga el diccionario desde el archivo JSON
+        if os.path.exists(ruta_archivo_json):
+            with open(ruta_archivo_json, 'r') as archivo_json:
+                datos = json.load(archivo_json)
+        else:
+            datos = {'id_cliente':cuenta_origen.cliente.id ,'cuenta': cuenta_origen.numero_cuenta, 'transacciones': []}
+
+        # Agrega la nueva transacción al diccionario
+        datos['transacciones'].append(model_to_dict(transaccion))   
+
+        # Guarda el diccionario actualizado en el archivo JSON
+        with open(ruta_archivo_json, 'w') as archivo_json:
+            json.dump(json.loads(json.dumps(datos, use_decimal=True)), archivo_json)
+
+
+        release_cs(central_server)
+        print(f"salió de la sección crítica.")
+        # time.sleep(2)  # Espera antes de intentar ingresar nuevamente
+
